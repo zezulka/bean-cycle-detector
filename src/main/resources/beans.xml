@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="autowiredClassA"  class="com.example.demo.autowired.AutowiredClassA"/>
+    <bean id="autowiredClassB"    class="com.example.demo.autowired.AutowiredClassB"/>
+
+    <!-- notice the difference even on the XML level among @Autowired cycles and ctor DI
+       - we need to declare all beans on the cycle as lazy, otherwise the ctx won't even load -->
+    <bean id="ctorDIClassA"  class="com.example.demo.constructor.CtorDIClassA" lazy-init="true">
+        <constructor-arg ref="ctorDIClassB" />
+    </bean>
+
+    <bean id="ctorDIClassB"    class="com.example.demo.constructor.CtorDIClassB" lazy-init="true">
+        <constructor-arg ref="ctorDIClassA"/>
+    </bean>
+
+    <!-- including this bean forces bean cycle loading
+    <bean id="anotherBean" class="com.example.demo.AnotherBean" >
+        <constructor-arg ref="ctorDIClassB" />
+    </bean>
+    -->
+</beans>
